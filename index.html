@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>For My Special Someone 💝</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400;700&family=Great+Vibes&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <!-- Opening Screen -->
+    <div id="opening-screen" class="screen active">
+        <div class="envelope">
+            <div class="envelope-flap"></div>
+            <div class="envelope-body">
+                <div class="letter">
+                    <h1><i class="fas fa-heart"></i> A Special Invitation <i class="fas fa-heart"></i></h1>
+                    <p>My Dearest,</p>
+                    <p>You've received a secret message. Click to open...</p>
+                </div>
+            </div>
+        </div>
+        <div class="instructions">
+            <p>Click anywhere to begin this special journey</p>
+            <div class="heart-pulse"><i class="fas fa-heart"></i></div>
+        </div>
+    </div>
+
+    <!-- Garden Scene -->
+    <div id="garden-screen" class="screen">
+        <div class="garden-container">
+            <div class="stars"></div>
+            <div class="moon"></div>
+            <div class="cloud cloud1"></div>
+            <div class="cloud cloud2"></div>
+            
+            <div class="scene-text">
+                <h2><i class="fas fa-moon"></i> A Magical Evening</h2>
+                <p>You find yourself in a beautiful garden on a warm evening...</p>
+                <p>The air smells like roses and chocolate.</p>
+                <p class="continue-text">Click to continue your journey <i class="fas fa-arrow-down"></i></p>
+            </div>
+            
+            <div class="rose rose1"><i class="fas fa-leaf"></i><i class="fas fa-heart"></i></div>
+            <div class="rose rose2"><i class="fas fa-leaf"></i><i class="fas fa-heart"></i></div>
+            <div class="rose rose3"><i class="fas fa-leaf"></i><i class="fas fa-heart"></i></div>
+            
+            <div class="path">
+                <div class="path-light"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Path Choice -->
+    <div id="path-screen" class="screen">
+        <div class="choice-container">
+            <h2><i class="fas fa-road"></i> Choose Your Path</h2>
+            <p class="subtitle">Each path leads to a different experience, but they all lead to the same destination...</p>
+            
+            <div class="paths">
+                <div class="path-choice" data-path="1">
+                    <div class="path-icon">
+                        <i class="fas fa-rose"></i>
+                    </div>
+                    <h3>The Rose Path</h3>
+                    <p>Lined with beautiful, fragrant roses</p>
+                </div>
+                
+                <div class="path-choice" data-path="2">
+                    <div class="path-icon">
+                        <i class="fas fa-fairy"></i>
+                    </div>
+                    <h3>The Fairy Path</h3>
+                    <p>Twinkling with magical fairy lights</p>
+                </div>
+                
+                <div class="path-choice" data-path="3">
+                    <div class="path-icon">
+                        <i class="fas fa-moon"></i>
+                    </div>
+                    <h3>The Moonlight Path</h3>
+                    <p>Guided by the gentle glow of the moon</p>
+                </div>
+            </div>
+            
+            <div class="hint">
+                <p><i class="fas fa-lightbulb"></i> Click on a path to continue</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Riddle Screen -->
+    <div id="riddle-screen" class="screen">
+        <div class="riddle-container">
+            <div class="gate">
+                <div class="gate-left"></div>
+                <div class="gate-right"></div>
+                <div class="gate-lock">
+                    <i class="fas fa-lock"></i>
+                </div>
+            </div>
+            
+            <div class="riddle-content">
+                <h2><i class="fas fa-key"></i> Unlock The Gate</h2>
+                <p>Solve this riddle to continue:</p>
+                
+                <div class="riddle-poem">
+                    <p>"I'm not a box of chocolates,</p>
+                    <p>Nor a simple bouquet,</p>
+                    <p>I'm something much more precious,</p>
+                    <p>That I hope you'll say..."</p>
+                </div>
+                
+                <div class="input-container">
+                    <input type="text" id="riddle-answer" placeholder="Type your answer here...">
+                    <button id="submit-answer">Unlock <i class="fas fa-unlock"></i></button>
+                </div>
+                
+                <div class="hint">
+                    <p><i class="fas fa-lightbulb"></i> Hint: It's what Valentine's Day is all about</p>
+                </div>
+                
+                <div id="feedback" class="hidden">
+                    <p></p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Proposal Screen -->
+    <div id="proposal-screen" class="screen">
+        <div class="proposal-container">
+            <div class="heart-animation">
+                <div class="heart heart1"><i class="fas fa-heart"></i></div>
+                <div class="heart heart2"><i class="fas fa-heart"></i></div>
+                <div class="heart heart3"><i class="fas fa-heart"></i></div>
+                <div class="heart heart4"><i class="fas fa-heart"></i></div>
+                <div class="heart heart5"><i class="fas fa-heart"></i></div>
+            </div>
+            
+            <div class="message">
+                <h2><i class="fas fa-star"></i> For My Amazing Person <i class="fas fa-star"></i></h2>
+                
+                <div class="letter-content">
+                    <p>My Dearest,</p>
+                    <p>Every day with you feels like a celebration.</p>
+                    <p>You've brought so much joy and love into my world.</p>
+                    <p>You make everything brighter, everything better.</p>
+                    <p>And on this special day...</p>
+                    
+                    <div class="proposal-question">
+                        <p class="question">Will you be my Valentine?</p>
+                    </div>
+                </div>
+                
+                <div class="response-buttons">
+                    <button id="yes-btn" class="response-btn">
+                        <i class="fas fa-heart"></i> YES! <i class="fas fa-heart"></i>
+                    </button>
+                    <button id="no-btn" class="response-btn">
+                        <i class="fas fa-heart-broken"></i> No
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Yes Response -->
+    <div id="yes-screen" class="screen">
+        <div class="celebration">
+            <div class="confetti"></div>
+            <div class="confetti"></div>
+            <div class="confetti"></div>
+            <div class="confetti"></div>
+            <div class="confetti"></div>
+            
+            <div class="celebration-content">
+                <h1><i class="fas fa-heart-circle-check"></i> You've Made Me So Happy!</h1>
+                <div class="big-heart">
+                    <i class="fas fa-heart"></i>
+                </div>
+                <p class="celebration-text">My heart is bursting with joy! ❤️</p>
+                <p class="celebration-text">You've made me the luckiest person alive!</p>
+                <p class="celebration-text">Happy Valentine's Day, my love!</p>
+                
+                <div class="final-message">
+                    <p><i class="fas fa-quote-left"></i> The best thing to hold onto in life is each other. <i class="fas fa-quote-right"></i></p>
+                    <p class="signature">- With all my love</p>
+                </div>
+                
+                <button id="restart-btn" class="restart-btn">
+                    <i class="fas fa-redo"></i> Relive the Magic
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- No Response -->
+    <div id="no-screen" class="screen">
+        <div class="no-response-content">
+            <div class="gentle-heart">
+                <i class="fas fa-heart"></i>
+            </div>
+            
+            <h1>I Understand...</h1>
+            <p class="gentle-text">Thank you for being honest with me.</p>
+            <p class="gentle-text">I'll always cherish our friendship.</p>
+            <p class="gentle-text">You mean the world to me, no matter what.</p>
+            
+            <div class="friendship-message">
+                <p><i class="fas fa-hand-holding-heart"></i> True feelings are always worth expressing.</p>
+                <p>Thank you for sharing this moment with me.</p>
+            </div>
+            
+            <button id="restart-no-btn" class="restart-btn">
+                <i class="fas fa-redo"></i> Start Over
+            </button>
+        </div>
+    </div>
+
+    <!-- Background Music -->
+    <audio id="bg-music" loop>
+        <source src="https://assets.mixkit.co/music/preview/mixkit-romantic-sunset-687.mp3" type="audio/mpeg">
+    </audio>
+    
+    <!-- Sound Controls -->
+    <div class="sound-controls">
+        <button id="music-toggle">
+            <i class="fas fa-volume-up"></i>
+        </button>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
