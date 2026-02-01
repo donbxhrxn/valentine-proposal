@@ -41,6 +41,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
 // Show specific screen
 function showScreen(screenIndex) {
+    console.log("Showing screen:", screenIndex); // Debug log
+    
     screens.forEach(screen => screen.classList.remove('active'));
     screens[screenIndex].classList.add('active');
     currentScreen = screenIndex;
@@ -51,12 +53,14 @@ function showScreen(screenIndex) {
             animateEnvelope();
             break;
         case 1: // Date screen
-            // Nothing special needed
+            console.log("Date screen loaded");
             break;
         case 2: // Proposal screen
+            console.log("Proposal screen loaded");
             setupProposal();
             break;
         case 3: // Celebration screen
+            console.log("Celebration screen loaded");
             startCelebration();
             break;
     }
@@ -77,21 +81,49 @@ function animateEnvelope() {
 
 // Setup event listeners
 function setupEventListeners() {
+    console.log("Setting up event listeners");
+    
     // Click to proceed from opening screen
-    document.getElementById('opening-screen').addEventListener('click', () => {
+    document.getElementById('opening-screen').addEventListener('click', (e) => {
+        console.log("Opening screen clicked");
         if (currentScreen === 0) {
             showScreen(1);
             playSound('select');
         }
     });
     
-    // Continue to proposal button
+    // Continue to proposal button - FIXED THIS
+    const continueButton = document.getElementById('continue-to-proposal');
     if (continueButton) {
-        continueButton.addEventListener('click', () => {
+        console.log("Found continue button");
+        continueButton.addEventListener('click', (e) => {
+            console.log("Continue button clicked");
+            e.preventDefault();
+            e.stopPropagation();
             showScreen(2);
             playSound('select');
         });
+        
+        // Also allow touch for mobile
+        continueButton.addEventListener('touchstart', (e) => {
+            console.log("Continue button touched");
+            e.preventDefault();
+            showScreen(2);
+            playSound('select');
+        });
+    } else {
+        console.log("Continue button NOT FOUND");
     }
+    
+    // Date screen also clickable to proceed
+    document.getElementById('date-screen').addEventListener('click', (e) => {
+        console.log("Date screen clicked");
+        // Only proceed if not clicking on the button itself
+        if (currentScreen === 1 && e.target.id !== 'continue-to-proposal' && !e.target.closest('.cute-button')) {
+            showScreen(2);
+            playSound('select');
+        }
+    });
     
     // Restart button
     if (restartButton) {
@@ -115,46 +147,99 @@ function setupEventListeners() {
     
     // Add tap sounds to buttons
     document.querySelectorAll('.cute-button').forEach(button => {
-        button.addEventListener('click', () => playSound('tap'));
+        button.addEventListener('click', (e) => {
+            e.stopPropagation();
+            playSound('tap');
+        });
         button.addEventListener('mouseenter', () => {
             if (!document.body.classList.contains('mobile')) {
                 playSound('hover');
             }
         });
     });
+    
+    // Make sure proposal screen hearts are clickable
+    setTimeout(() => {
+        const hearts = document.querySelectorAll('.catch-heart');
+        if (hearts.length > 0) {
+            console.log("Hearts found for setup");
+        }
+    }, 1000);
 }
 
 // Setup proposal interaction
 function setupProposal() {
+    console.log("Setting up proposal screen");
+    
     // Reset heart count
     caughtHearts = 0;
     updateHeartCounter();
     
     // Setup heart catching
     const hearts = document.querySelectorAll('.catch-heart');
-    hearts.forEach(heart => {
+    console.log("Found hearts:", hearts.length);
+    
+    hearts.forEach((heart, index) => {
         heart.classList.remove('caught');
         
         // Click/tap to catch heart
-        heart.addEventListener('click', () => catchHeart(heart));
-        
-        // Mobile touch feedback
-        heart.addEventListener('touchstart', () => {
-            heart.style.transform = 'scale(1.1)';
+        heart.addEventListener('click', (e) => {
+            e.stopPropagation();
+            console.log("Heart clicked:", index);
+            catchHeart(heart);
         });
         
-        heart.addEventListener('touchend', () => {
-            heart.style.transform = '';
+        // Mobile touch
+        heart.addEventListener('touchstart', (e) => {
+            e.preventDefault();
+            console.log("Heart touched:", index);
+            catchHeart(heart);
         });
     });
     
     // Generate floating hearts
     generateFloatingHearts();
+    
+    // Make entire proposal screen clickable as fallback
+    document.getElementById('proposal-screen').addEventListener('click', (e) => {
+        if (currentScreen === 2 && !e.target.closest('.catch-heart') && !e.target.closest('.cute-button')) {
+            // If clicking empty space, show hint
+            showHint();
+        }
+    });
+}
+
+// Show hint if stuck
+function showHint() {
+    const hint = document.createElement('div');
+    hint.innerHTML = '💡 Tap the hearts to say YES! 💖';
+    hint.style.position = 'fixed';
+    hint.style.top = '20px';
+    hint.style.left = '50%';
+    hint.style.transform = 'translateX(-50%)';
+    hint.style.background = 'rgba(255, 255, 255, 0.95)';
+    hint.style.padding = '15px 25px';
+    hint.style.borderRadius = '20px';
+    hint.style.border = '3px solid #ff80b3';
+    hint.style.zIndex = '10000';
+    hint.style.fontSize = '18px';
+    hint.style.fontWeight = 'bold';
+    hint.style.color = '#ff3366';
+    hint.style.boxShadow = '0 5px 20px rgba(255, 128, 179, 0.5)';
+    hint.style.textAlign = 'center';
+    
+    document.body.appendChild(hint);
+    
+    setTimeout(() => {
+        hint.remove();
+    }, 2000);
 }
 
 // Catch a heart
 function catchHeart(heartElement) {
     if (heartElement.classList.contains('caught')) return;
+    
+    console.log("Catching heart");
     
     // Mark as caught
     heartElement.classList.add('caught');
@@ -168,6 +253,7 @@ function catchHeart(heartElement) {
     
     // Check if all hearts caught
     if (caughtHearts >= totalHearts) {
+        console.log("All hearts caught!");
         // All hearts caught - celebrate!
         setTimeout(() => {
             celebrateYes();
@@ -238,6 +324,8 @@ function getRandomPastelColor() {
 
 // Celebrate YES response
 function celebrateYes() {
+    console.log("Celebrating YES!");
+    
     // Play celebration sound
     playSound('celebration');
     
@@ -249,6 +337,8 @@ function celebrateYes() {
 
 // Start celebration animation
 function startCelebration() {
+    console.log("Starting celebration");
+    
     // Generate confetti
     generateConfetti();
     
@@ -360,6 +450,8 @@ function toggleMusic() {
 
 // Restart the experience
 function restartExperience() {
+    console.log("Restarting experience");
+    
     // Reset game state
     currentScreen = 0;
     caughtHearts = 0;
@@ -408,7 +500,25 @@ function takeScreenshot() {
     }, 2000);
 }
 
-// Add CSS for new animations
+// Also add this fallback: If user taps anywhere on date screen, go to proposal
+document.addEventListener('DOMContentLoaded', () => {
+    // Make date screen clickable to proceed (as fallback)
+    const dateScreen = document.getElementById('date-screen');
+    if (dateScreen) {
+        dateScreen.addEventListener('click', (e) => {
+            // Only proceed if we're on date screen and not clicking a button
+            if (currentScreen === 1 && 
+                e.target.id !== 'continue-to-proposal' && 
+                !e.target.closest('.cute-button')) {
+                console.log("Date screen tapped - going to proposal");
+                showScreen(2);
+                playSound('select');
+            }
+        });
+    }
+});
+
+// Add CSS for new animations and fixes
 const style = document.createElement('style');
 style.textContent = `
     @keyframes floatHeartDown {
@@ -432,6 +542,20 @@ style.textContent = `
         animation: floatHeartDown 6s infinite linear;
     }
     
+    /* Make sure buttons are clickable */
+    .cute-button {
+        cursor: pointer !important;
+        position: relative;
+        z-index: 10;
+    }
+    
+    /* Make hearts more clickable */
+    .catch-heart {
+        cursor: pointer !important;
+        position: relative;
+        z-index: 10;
+    }
+    
     /* Mobile improvements */
     .mobile .catch-heart {
         cursor: pointer;
@@ -439,6 +563,15 @@ style.textContent = `
     
     .mobile .catch-heart:active {
         transform: scale(1.2) !important;
+    }
+    
+    /* Make entire date screen slightly clickable */
+    #date-screen {
+        cursor: pointer;
+    }
+    
+    #date-screen .date-content {
+        cursor: auto;
     }
     
     /* Responsive improvements */
@@ -459,6 +592,16 @@ style.textContent = `
         .hearts-to-catch {
             gap: 10px;
         }
+        
+        .cute-button {
+            padding: 20px !important;
+            font-size: 18px !important;
+        }
+    }
+    
+    /* Add pulsing effect to continue button */
+    #continue-to-proposal {
+        animation: pulse 2s infinite;
     }
 `;
 document.head.appendChild(style);
