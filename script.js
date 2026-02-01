@@ -8,12 +8,12 @@ const feedback = document.getElementById('feedback');
 const yesBtn = document.getElementById('yes-btn');
 const noBtn = document.getElementById('no-btn');
 const restartBtn = document.getElementById('restart-btn');
-const restartNoBtn = document.getElementById('restart-no-btn');
 
 // Game State
 let currentScreen = 0;
 let chosenPath = null;
 let musicEnabled = true;
+let isYesClicked = false;
 
 // Initialize
 document.addEventListener('DOMContentLoaded', () => {
@@ -71,6 +71,12 @@ function showScreen(screenIndex) {
         hearts.forEach(heart => {
             heart.style.opacity = '1';
         });
+        
+        // Reset button states
+        isYesClicked = false;
+        noBtn.innerHTML = '<i class="fas fa-heart"></i> YES! <i class="fas fa-heart"></i>';
+        noBtn.style.background = 'linear-gradient(135deg, #e63946 0%, #ff6b8b 100%)';
+        noBtn.style.animation = '';
     } else if (screenIndex === 5) {
         // Yes screen - start confetti
         const confetti = document.querySelectorAll('.confetti');
@@ -133,36 +139,105 @@ function setupEventListeners() {
         }
     });
     
-    // Proposal responses
+    // Proposal responses - BOTH BUTTONS ARE YES!
     yesBtn.addEventListener('click', () => {
-        // Create a burst of hearts
-        createHeartBurst();
-        // Play celebration sound
-        playCelebrationSound();
-        // Show yes screen after delay
+        if (!isYesClicked) {
+            isYesClicked = true;
+            celebrateYes();
+        }
+    });
+    
+    // NO button initially shows as YES but has special behavior
+    noBtn.addEventListener('mouseenter', () => {
+        // Make both buttons glow
+        yesBtn.style.transform = 'scale(1.2)';
+        yesBtn.style.boxShadow = '0 0 40px rgba(230, 57, 70, 0.8)';
+        yesBtn.style.zIndex = '10';
+        
+        noBtn.style.transform = 'scale(1.2)';
+        noBtn.style.boxShadow = '0 0 40px rgba(230, 57, 70, 0.8)';
+        noBtn.style.zIndex = '10';
+        
+        // Play happy sound
+        if (musicEnabled) {
+            const happySound = new Audio('https://assets.mixkit.co/sfx/preview/mixkit-correct-answer-tone-2870.mp3');
+            happySound.volume = 0.3;
+            happySound.play().catch(e => console.log("Sound prevented"));
+        }
+    });
+    
+    noBtn.addEventListener('mouseleave', () => {
+        // Reset buttons
         setTimeout(() => {
-            showScreen(5);
-        }, 1500);
+            yesBtn.style.transform = '';
+            yesBtn.style.boxShadow = '';
+            yesBtn.style.zIndex = '';
+            
+            noBtn.style.transform = '';
+            noBtn.style.boxShadow = '';
+            noBtn.style.zIndex = '';
+        }, 300);
     });
     
-    noBtn.addEventListener('click', () => {
-        // Show no screen
-        showScreen(6);
+    // When NO button is clicked (it shows as YES), it also says YES!
+    noBtn.addEventListener('click', (e) => {
+        e.preventDefault();
+        
+        if (!isYesClicked) {
+            isYesClicked = true;
+            
+            // Transform NO button to show it's accepting YES
+            noBtn.innerHTML = '<i class="fas fa-heart"></i> You chose YES! <i class="fas fa-heart"></i>';
+            noBtn.style.background = 'linear-gradient(135deg, #4CAF50 0%, #2E7D32 100%)';
+            noBtn.style.transform = 'scale(1.3)';
+            noBtn.style.boxShadow = '0 0 50px rgba(76, 175, 80, 0.8)';
+            
+            // Also transform YES button
+            yesBtn.innerHTML = '<i class="fas fa-heart"></i> We both say YES! <i class="fas fa-heart"></i>';
+            yesBtn.style.background = 'linear-gradient(135deg, #4CAF50 0%, #2E7D32 100%)';
+            yesBtn.style.transform = 'scale(1.3)';
+            yesBtn.style.boxShadow = '0 0 50px rgba(76, 175, 80, 0.8)';
+            
+            // Add special class to show both are YES
+            document.querySelector('.response-buttons').classList.add('both-yes');
+            
+            // Celebrate!
+            setTimeout(() => {
+                celebrateYes();
+            }, 1500);
+        }
     });
     
-    // Restart buttons
+    // Also make YES button highlight both
+    yesBtn.addEventListener('mouseenter', () => {
+        noBtn.style.transform = 'scale(1.1)';
+        noBtn.style.boxShadow = '0 0 20px rgba(230, 57, 70, 0.5)';
+    });
+    
+    yesBtn.addEventListener('mouseleave', () => {
+        setTimeout(() => {
+            noBtn.style.transform = '';
+            noBtn.style.boxShadow = '';
+        }, 300);
+    });
+    
+    // Restart button
     restartBtn.addEventListener('click', restartExperience);
-    restartNoBtn.addEventListener('click', restartExperience);
     
     // Music toggle
     musicToggle.addEventListener('click', toggleMusic);
-    
-    // Add hover sound effects to buttons
-    document.querySelectorAll('button').forEach(button => {
-        button.addEventListener('mouseenter', () => {
-            playHoverSound();
-        });
-    });
+}
+
+// Celebrate YES response
+function celebrateYes() {
+    // Create a burst of hearts
+    createHeartBurst();
+    // Play celebration sound
+    playCelebrationSound();
+    // Show yes screen after delay
+    setTimeout(() => {
+        showScreen(5);
+    }, 1500);
 }
 
 // Check riddle answer
@@ -260,15 +335,6 @@ function playCelebrationSound() {
     celebrationSound.play().catch(e => console.log("Sound play prevented:", e));
 }
 
-// Play hover sound
-function playHoverSound() {
-    if (!musicEnabled) return;
-    
-    const hoverSound = new Audio('https://assets.mixkit.co/sfx/preview/mixkit-select-click-1109.mp3');
-    hoverSound.volume = 0.2;
-    hoverSound.play().catch(e => console.log("Hover sound prevented:", e));
-}
-
 // Toggle background music
 function toggleMusic() {
     musicEnabled = !musicEnabled;
@@ -316,6 +382,9 @@ function restartExperience() {
         choice.style.transform = '';
         choice.style.opacity = '';
     });
+    
+    // Reset response buttons
+    document.querySelector('.response-buttons').classList.remove('both-yes');
     
     // Go back to opening screen
     showScreen(0);
